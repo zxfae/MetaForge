@@ -1,6 +1,6 @@
 pub mod blockchain;
 pub mod blocks;
-mod utils;
+pub mod utils;
 
 use std::thread;
 use std::time::Duration;
