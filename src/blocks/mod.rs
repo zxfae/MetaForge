@@ -10,13 +10,13 @@ pub struct Block {
 }
 
 impl Block {
-    pub fn new(data: Vec<String>, prev_hash: [u8; 32]) -> Self {
+    pub fn new(data: &Vec<String>, prev_hash: &[u8; 32]) -> Self {
         let time_stamp = Utc::now();
         let mut block = Block {
             time_stamp,
-            prev_hash,
+            prev_hash: *prev_hash,
             hash: [0; 32],
-            data,
+            data: data.to_vec(),
         };
 
         block.hash = block.calculate_hash();
@@ -25,7 +25,7 @@ impl Block {
 
     //@Notice prev_hash for genesis_block == 0
     pub fn genesis_block() -> Self {
-        Block::new(vec!["Genesis_Block !".to_string()], [0; 32])
+        Block::new(&vec!["Genesis_Block !".to_string()], &[0; 32])
     }
 
     pub fn formatted_timestamp_with_month(&self) -> String {

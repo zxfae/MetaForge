@@ -15,7 +15,7 @@ impl Blockchain {
 
     pub fn add(&mut self, data: Vec<String>) -> &Block {
         let prev_block = self.blocks.last().unwrap();
-        let new_block = Block::new(data, prev_block.hash);
+        let new_block = Block::new(&data, &prev_block.hash);
 
         self.blocks.push(new_block);
         self.blocks.last().unwrap()
