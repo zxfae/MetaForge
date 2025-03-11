@@ -15,17 +15,17 @@ fn main() {
         my_own_blockchain.blocks[0].hash_to_hex()
     );
 
-    println!("test, {:?}", my_own_blockchain);
+    println!("Genesis block{:?}\n", my_own_blockchain);
 
-    let sim_n = 10;
-    for i in 1..=sim_n {
+    let simulation = 10;
+    for i in 1..=simulation {
         thread::sleep(Duration::from_secs(3));
 
-        let data = format!("Data for block {}", i);
+        let data = vec!["Hello World !".to_string()];
         let new_block = my_own_blockchain.add(data);
 
         println!("\nBloc #{} added", i);
-        println!("  Header: {}", new_block.header);
+        println!("  Datas: {:?}", new_block.data);
         println!("  Hash: {}", new_block.hash_to_hex());
         println!(
             "  Timestamp: {}",
@@ -33,13 +33,4 @@ fn main() {
         );
         println!("  Prev_block: {}", hex::encode(new_block.prev_hash));
     }
-
-    let is_ok = my_own_blockchain.verify();
-    println!("\nValidity: {}", is_ok);
-
-    println!("\nTesting blockchain integrity");
-    let mut tampered_blockchain = my_own_blockchain;
-    tampered_blockchain.blocks[1].header = "Block #Data for block 2".to_string();
-    let is_still_valid = tampered_blockchain.verify();
-    println!("Blockchain validity after tampering: {}", is_still_valid);
 }

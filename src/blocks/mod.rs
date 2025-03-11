@@ -3,23 +3,29 @@ use sha2::{Digest, Sha256};
 
 #[derive(Debug)]
 pub struct Block {
-    pub header: String,
-    //Hash SHA-256 (or other)
-    pub prev_hash: [u8; 32],
-    //Chronological ordering
     pub time_stamp: DateTime<Utc>,
-    //pub nonce: u64,
+    pub prev_hash: [u8; 32],
+    pub hash: [u8; 32],
+    pub data: Vec<String>,
 }
 
 impl Block {
-    //Constructs new instance
-    pub fn new(header: String, prev_hash: [u8; 32]) -> Self {
-        Block {
-            header,
+    pub fn new(data: Vec<String>, prev_hash: [u8; 32]) -> Self {
+        let time_stamp = Utc::now();
+        let mut block = Block {
+            time_stamp,
             prev_hash,
-            time_stamp: Utc::now(),
-            //nonce: 0,
-        }
+            hash: [0; 32],
+            data,
+        };
+
+        block.hash = block.calculate_hash();
+        block
+    }
+
+    //@Notice prev_hash for genesis_block == 0
+    pub fn genesis_block() -> Self {
+        Block::new(vec!["Genesis_Block !".to_string()], [0; 32])
     }
 
     pub fn formatted_timestamp_with_month(&self) -> String {
@@ -30,18 +36,28 @@ impl Block {
     pub fn calculate_hash(&self) -> [u8; 32] {
         let mut hasher = Sha256::new();
 
-        Digest::update(&mut hasher, &self.header.as_bytes());
-        Digest::update(&mut hasher, &self.prev_hash);
         Digest::update(&mut hasher, &self.time_stamp.to_rfc3339().as_bytes());
+        Digest::update(&mut hasher, &self.prev_hash);
+
+        for values in &self.data {
+            hasher.update(values.as_bytes());
+        }
 
         let result = hasher.finalize();
         let mut hash = [0; 32];
         hash.copy_from_slice(&result);
         hash
     }
-
+    //@Quest : Need refacto hash && last hash encode
+    //@Dev : Formatting hash_to_hex
     pub fn hash_to_hex(&self) -> String {
-        hex::encode(self.calculate_hash())
+        //high performance cost
+        //hex::encode(self.calculate_hash())
+        hex::encode(self.hash)
+    }
+
+    pub fn last_hash_to_hex(&self) -> String {
+        hex::encode(self.prev_hash)
     }
 }
 
