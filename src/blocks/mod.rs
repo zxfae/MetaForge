@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use sha2::{Digest, Sha256};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Block {
     pub time_stamp: DateTime<Utc>,
     pub prev_hash: [u8; 32],

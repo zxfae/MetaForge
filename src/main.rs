@@ -22,7 +22,7 @@ fn main() {
         thread::sleep(Duration::from_secs(3));
 
         let data = vec!["Hello World !".to_string()];
-        let new_block = my_own_blockchain.add(data);
+        let new_block = my_own_blockchain.add(&data);
 
         println!("\nBloc #{} added", i);
         println!("  Datas: {:?}", new_block.data);

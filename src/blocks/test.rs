@@ -1,10 +1,12 @@
 use super::Block;
 
+//@Dev : Block::new() get Vec<String> && [u8; 32] parameters;
+//@Dev : Block.hash is [u8; 32]
 //@Notice : Block creation; datas correctly set; hash_calculation(assert_ne!)
 #[test]
 fn block_format() {
-    let datas = vec!["Hello World !".to_string()];
-    let prev_hash = [1u8; 32];
+    let datas: Vec<String> = vec!["Hello World !".to_string()];
+    let prev_hash: [u8; 32] = [1u8; 32];
     let block = Block::new(&datas, &prev_hash);
 
     assert_eq!(block.data, datas);
@@ -29,8 +31,8 @@ fn genesis_block() {
 //@Dev : with other data; hash must be != equal
 #[test]
 fn test_hash() {
-    let data = vec!["Hello World !".to_string()];
-    let prev_hash = [2u8; 32];
+    let data: Vec<String> = vec!["Hello World !".to_string()];
+    let prev_hash: [u8; 32] = [2u8; 32];
     let block1 = Block::new(&data, &prev_hash);
     // Will be same
     let hash_calculated = block1.calculate_hash();
@@ -39,16 +41,13 @@ fn test_hash() {
     let other_data = vec!["Others datas !".to_string()];
     let block2 = Block::new(&other_data, &prev_hash);
 
-    println!("Bloc 1 hash: {}i\n", hex::encode(block1.hash));
-    println!("Bloc 2 hash: {}", hex::encode(block2.hash));
-
     assert_ne!(block1.hash, block2.hash);
 }
 
 #[test]
 fn test_blockchain_block() {
     let genesis = Block::genesis_block();
-    let next_data = vec!["Next Block".to_string()];
+    let next_data: Vec<String> = vec!["Next Block".to_string()];
 
     let next_block = Block::new(&next_data, &genesis.hash);
     //@Dev : nextblock.prev must be equal to genesis hash
